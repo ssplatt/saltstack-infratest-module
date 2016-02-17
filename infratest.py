@@ -398,7 +398,7 @@ def test_sysctl(thing, expected):
     return INFRATEST
     
 
-def run_all(details=False, failed=False, passed=False):
+def run_all(details=True):
     if 'file' in tests:
         for key, vals in tests['file'].items():
             if 'exists' in vals:
