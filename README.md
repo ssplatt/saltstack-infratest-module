@@ -6,6 +6,9 @@ Testinfra is a python module created to test your infrastructure. For more info:
  - http://testinfra.readthedocs.org/en/latest/
  - https://github.com/philpep/testinfra
 
+## Install
+To install the module, place `infratest.py` in the salt modules directory. By default this is `/srv/salt/_modules`. Then, run `salt \* saltutil.sync_modules` to copy the module to all nodes.
+
 ## Configure
 This module loads configuration data from pillar so you can maintain it as you would any other server definition. For simple usage, create a `pillar/infratest` directory and place the `default.sls` inside it.  Then, in your `pillar/top.sls` file, configure a section to use `infratest.default`.  You can create other sls configuration files so you can overwrite and merge configurations for other servers. For example:
 
