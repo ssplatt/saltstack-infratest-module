@@ -6,6 +6,11 @@ Testinfra is a python module created to test your infrastructure. For more info:
  - http://testinfra.readthedocs.org/en/latest/
  - https://github.com/philpep/testinfra
 
+This module must be installed on each system you wish to test.  To install:
+```
+# pip install testinfra
+```
+
 ## Install
 To install the module, place `infratest.py` in the salt modules directory. By default this is `/srv/salt/_modules`. Then, run `salt \* saltutil.sync_modules` to copy the module to all nodes.
 
