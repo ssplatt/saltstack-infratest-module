@@ -2,7 +2,11 @@
 '''
 infratest
 
-module to test server state using testinfra
+summary: module to verify server state
+url: https://github.com/ssplatt/saltstack-infratest-module
+license: GPLv3, see LICENSE for more
+created by: Brett Taylor <sweet.brett@gmail.com>
+
 documentation for the main python project: http://testinfra.readthedocs.org/
 '''
 
