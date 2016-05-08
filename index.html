@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Saltstack-infratest-module by ssplatt</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Saltstack-infratest-module</h1>
+          <h2>A Salt module using the testinfra python module for infrastructure compliance testing and auditing.</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/ssplatt/saltstack-infratest-module/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/ssplatt/saltstack-infratest-module/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/ssplatt/saltstack-infratest-module" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a id="saltstack-infratest-module" class="anchor" href="#saltstack-infratest-module" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>saltstack-infratest-module</h1>
+
+<p>A Salt module using the testinfra python module for compliance testing and auditing. This allows you to take advantage of the many features of Salt, like the yaml merging for configuration and the database of servers to test.</p>
+
+<h2>
+<a id="testinfra" class="anchor" href="#testinfra" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Testinfra</h2>
+
+<p>Testinfra is a python module created to test your infrastructure. For more info:</p>
+
+<ul>
+<li><a href="http://testinfra.readthedocs.org/en/latest/">http://testinfra.readthedocs.org/en/latest/</a></li>
+<li><a href="https://github.com/philpep/testinfra">https://github.com/philpep/testinfra</a></li>
+</ul>
+
+<p>This module must be installed on each system you wish to test.  To install:</p>
+
+<pre><code># pip install testinfra
+</code></pre>
+
+<h2>
+<a id="install" class="anchor" href="#install" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install</h2>
+
+<p>There is a simple Salt formula available at <a href="https://github.com/ssplatt/infratest-formula">https://github.com/ssplatt/infratest-formula</a>.</p>
+
+<p>To manually install the module, place <code>infratest.py</code> in the salt modules directory. By default this is <code>/srv/salt/_modules</code>. Then, run <code>salt \* saltutil.sync_modules</code> to copy the module to all nodes.</p>
+
+<h2>
+<a id="configure" class="anchor" href="#configure" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configure</h2>
+
+<p>This module loads configuration data from pillar so you can maintain it as you would any other server definition. For simple usage, create a <code>pillar/infratest</code> directory and place the <code>default.sls</code> inside it.  Then, in your <code>pillar/top.sls</code> file, configure a section to use <code>infratest.default</code>.  You can create other sls configuration files so you can overwrite and merge configurations for other servers. For example:</p>
+
+<div class="highlight highlight-source-yaml"><pre><span class="pl-c"># pillar/top.sls</span>
+<span class="pl-s">-<span class="pl-s">--</span></span>
+<span class="pl-s"><span class="pl-ent">base:</span></span>
+  <span class="pl-s"><span class="pl-ent">'*':</span></span>
+    <span class="pl-s">- <span class="pl-s">infratest.default</span></span>
+
+  <span class="pl-s"><span class="pl-ent">'web*':</span></span>
+    <span class="pl-s">- <span class="pl-s">infratest.web</span></span></pre></div>
+
+<div class="highlight highlight-source-yaml"><pre><span class="pl-c"># pillar/infratest/default.sls</span>
+<span class="pl-s">-<span class="pl-s">--</span></span>
+<span class="pl-s"><span class="pl-ent">infratest:</span></span>
+  <span class="pl-s"><span class="pl-ent">file:</span></span>
+    <span class="pl-s"><span class="pl-ent">'/etc/passwd':</span></span>
+      <span class="pl-s"><span class="pl-ent">exists:</span> <span class="pl-c1">true</span></span></pre></div>
+
+<div class="highlight highlight-source-yaml"><pre><span class="pl-c"># pillar/infratest/web.sls</span>
+<span class="pl-s">-<span class="pl-s">--</span></span>
+<span class="pl-s"><span class="pl-ent">infratest:</span></span>
+  <span class="pl-s"><span class="pl-ent">file:</span></span>
+    <span class="pl-s"><span class="pl-ent">'/etc/httpd':</span></span>
+      <span class="pl-s"><span class="pl-ent">exists:</span> <span class="pl-c1">true</span></span></pre></div>
+
+<p>The yaml should merge so that all servers will check for <code>/etc/passwd</code> to exist and servers beginning with <code>web</code> will also check for <code>/etc/httpd</code> to exist. To confirm that your pillar data is merging the way you expect it, run <code>salt \* pillar.get infratest</code> on your salt-master. <code>salt \* saltutil.refresh_pillar</code> may be needed to refresh the pillar on all devices after changes have been made.</p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<h3>
+<a id="all-tests" class="anchor" href="#all-tests" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>All Tests</h3>
+
+<p><code># salt \* infratest.run_all</code></p>
+
+<pre><code>salt-master.mycorp.com:
+    ----------
+    Failed:
+        - sshd is enabled: True
+    Passed:
+        - /etc/passwd exists: True
+        - /etc/passwd is: file
+        - /etc/passwd is owned by user: root
+        - /etc/passwd is owned by group: root
+        - /etc/passwd has mode: 0644
+        - /etc/passwd contains: root
+    Totals:
+        ----------
+        Fail:
+            1
+        Pass:
+            6
+</code></pre>
+
+<h3>
+<a id="all-tests-with-abreviated-output" class="anchor" href="#all-tests-with-abreviated-output" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>All Tests with abreviated output</h3>
+
+<p><code># salt \* infratest.run_all details=False</code></p>
+
+<pre><code>salt-master.mycorp.com:
+    ----------
+    Fail:
+        1
+    Pass:
+        6
+</code></pre>
+
+<h3>
+<a id="a-single-test" class="anchor" href="#a-single-test" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>A Single Test</h3>
+
+<p><code># salt \* infratest.test_file_mode /etc/passwd 0644</code></p>
+
+<pre><code>salt-master.mycorp.com:
+    ----------
+    Failed:
+    Passed:
+        - /etc/passwd has mode: 0644
+</code></pre>
+
+<h2>
+<a id="todo" class="anchor" href="#todo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>TODO</h2>
+
+<ol>
+<li>Process tests</li>
+<li>LocalCommand tests</li>
+<li>Socket clients tests</li>
+<li>Socket get_listening_sockets tests</li>
+</ol>
+        </section>
+
+        <footer>
+          Saltstack-infratest-module is maintained by <a href="https://github.com/ssplatt">ssplatt</a><br>
+          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
