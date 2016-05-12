@@ -34,19 +34,6 @@ Interface = conn.get_module("Interface")
 SystemInfo = conn.get_module("SystemInfo")
 Sysctl = conn.get_module("Sysctl")
 
-# TODO
-# process tests
-# http://testinfra.readthedocs.org/en/latest/modules.html#process
-
-# localcommand tests
-# http://testinfra.readthedocs.org/en/latest/modules.html#localcommand
-
-# socket clients tests
-# http://testinfra.readthedocs.org/en/latest/modules.html#testinfra.modules.Socket.clients
-
-# socket get_listening_sockets
-# http://testinfra.readthedocs.org/en/latest/modules.html#testinfra.modules.Socket.get_listening_sockets
-
 INFRATEST = {}
 INFRATEST['Passed'] = []
 INFRATEST['Failed'] = []
@@ -56,18 +43,18 @@ def __virtual__():
     only load if testinfra is available
     '''
     
-    if HAS_TESTINFRA:
-        return __virtualname__
-    else:
+    if not HAS_TESTINFRA:
         return (False, 'infratest execution module cannot be loaded: testinfra python module unavailable.')
+    return __virtualname__
+        
 
-def test_file_exists(thing, expected):
+def file_exists(thing, expected):
     '''
     test if file exists
 
     CLI Example::
 
-        salt '*' infratest.test_file_exists /etc/passwd true
+        salt '*' infratest.file_exists /etc/passwd true
     '''
     
     detail = '{0} exists: {1}'.format(thing, expected)
@@ -77,13 +64,13 @@ def test_file_exists(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
     
-def test_file_isfile(thing, expected):
+def file_isfile(thing, expected):
     '''
     test if file is a file
 
     CLI Example::
 
-        salt '*' infratest.test_file_isfile /etc/passwd true
+        salt '*' infratest.file_isfile /etc/passwd true
     '''
     
     detail = '{0} is: {1}'.format(thing, expected)
@@ -93,13 +80,13 @@ def test_file_isfile(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
     
-def test_file_isdir(thing, expected):
+def file_isdir(thing, expected):
     '''
     test if file is a directory
 
     CLI Example::
 
-        salt '*' infratest.test_file_isdirectory /etc/init.d true
+        salt '*' infratest.file_isdirectory /etc/init.d true
     '''
     
     detail = '{0} is: {1}'.format(thing, expected)
@@ -109,13 +96,13 @@ def test_file_isdir(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
-def test_file_ispipe(thing, expected):
+def file_ispipe(thing, expected):
     '''
     test if file is a pipe
 
     CLI Example::
 
-        salt '*' infratest.test_file_ispipe /root/fifo1 true
+        salt '*' infratest.file_ispipe /root/fifo1 true
     '''
     
     detail = '{0} is: {1}'.format(thing, expected)
@@ -125,13 +112,13 @@ def test_file_ispipe(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
-def test_file_issocket(thing, expected):
+def file_issocket(thing, expected):
     '''
     test if file is a socket
 
     CLI Example::
 
-        salt '*' infratest.test_file_issocket /var/run/mysql.sock true
+        salt '*' infratest.file_issocket /var/run/mysql.sock true
     '''
     
     detail = '{0} is: {1}'.format(thing, expected)
@@ -141,13 +128,13 @@ def test_file_issocket(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
-def test_file_issymlink(thing, expected):
+def file_issymlink(thing, expected):
     '''
     test if file is a symlink
 
     CLI Example::
 
-        salt '*' infratest.test_file_issymlink /var/run true
+        salt '*' infratest.file_issymlink /var/run true
     '''
     
     detail = '{0} is: {1}'.format(thing, expected)
@@ -157,13 +144,13 @@ def test_file_issymlink(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
-def test_file_linkedto(thing, expected):
+def file_linkedto(thing, expected):
     '''
     test what a file is linked to
 
     CLI Example::
 
-        salt '*' infratest.test_file_linkedto /var/run /run
+        salt '*' infratest.file_linkedto /var/run /run
     '''
     
     detail = '{0} is linked to: {1}'.format(thing, expected)
@@ -173,13 +160,13 @@ def test_file_linkedto(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
-def test_file_user(thing, expected):
+def file_user(thing, expected):
     '''
     test if file is owned by user
 
     CLI Example::
 
-        salt '*' infratest.test_file_user /etc/passwd root
+        salt '*' infratest.file_user /etc/passwd root
     '''
     
     detail = '{0} is owned by user: {1}'.format(thing, expected)
@@ -189,13 +176,13 @@ def test_file_user(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
-def test_file_group(thing, expected):
+def file_group(thing, expected):
     '''
     test if file is owned by group
 
     CLI Example::
 
-        salt '*' infratest.test_file_group /etc/passwd wheel
+        salt '*' infratest.file_group /etc/passwd wheel
     '''
     
     detail = '{0} is owned by group: {1}'.format(thing, expected)
@@ -205,13 +192,13 @@ def test_file_group(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
-def test_file_uid(thing, expected):
+def file_uid(thing, expected):
     '''
     test if file is owned by uid
 
     CLI Example::
 
-        salt '*' infratest.test_file_uid /etc/passwd 0
+        salt '*' infratest.file_uid /etc/passwd 0
     '''
     
     detail = '{0} is owned by uid: {1}'.format(thing, expected)
@@ -221,13 +208,13 @@ def test_file_uid(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
-def test_file_gid(thing, expected):
+def file_gid(thing, expected):
     '''
     test if file is owned by gid
 
     CLI Example::
 
-        salt '*' infratest.test_file_gid /etc/passwd 0
+        salt '*' infratest.file_gid /etc/passwd 0
     '''
     
     detail = '{0} is owned by gid: {1}'.format(thing, expected)
@@ -237,13 +224,13 @@ def test_file_gid(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
-def test_file_mode(thing, expected):
+def file_mode(thing, expected):
     '''
     test file mode
 
     CLI Example::
 
-        salt '*' infratest.test_file_mode /etc/passwd 0644
+        salt '*' infratest.file_mode /etc/passwd 0644
     '''
     
     if type(expected) == int:
@@ -259,13 +246,13 @@ def test_file_mode(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
-def test_file_contains(thing, expected):
+def file_contains(thing, expected):
     '''
     test if file contains a pattern
 
     CLI Example::
 
-        salt '*' infratest.test_file_contains /etc/passwd root
+        salt '*' infratest.file_contains /etc/passwd root
     '''
     
     detail = '{0} contains: {1}'.format(thing, expected)
@@ -275,13 +262,13 @@ def test_file_contains(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
     
-def test_file_md5sum(thing, expected):
+def file_md5sum(thing, expected):
     '''
     test file md5sum
 
     CLI Example::
 
-        salt '*' infratest.test_file_md5sum /etc/passwd 2131233424234aabbccee...
+        salt '*' infratest.file_md5sum /etc/passwd 2131233424234aabbccee...
     '''
     
     detail = '{0} has md5sum: {1}'.format(thing, expected)
@@ -291,13 +278,13 @@ def test_file_md5sum(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
     
-def test_file_sha256sum(thing, expected):
+def file_sha256sum(thing, expected):
     '''
     test file sha256sum
 
     CLI Example::
 
-        salt '*' infratest.test_file_sha256sum /etc/passwd 1ab1ab1ab3bbab31ba3b1a...
+        salt '*' infratest.file_sha256sum /etc/passwd 1ab1ab1ab3bbab31ba3b1a...
     '''
     
     detail = '{0} has sha256sum: {1}'.format(thing, expected)
@@ -307,13 +294,13 @@ def test_file_sha256sum(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
-def test_file_mtime(thing, expected):
+def file_mtime(thing, expected):
     '''
     test file modification time
 
     CLI Example::
 
-        salt '*' infratest.test_file_mtime /etc/passwd '2012-01-01 10:01:22'
+        salt '*' infratest.file_mtime /etc/passwd '2012-01-01 10:01:22'
     
     python yaml tries to convert dates automatically on import
     but it is not predictable, necessarily
@@ -329,13 +316,13 @@ def test_file_mtime(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
-def test_file_size(thing, expected):
+def file_size(thing, expected):
     '''
     test file size in bytes
 
     CLI Example::
 
-        salt '*' infratest.test_file_size /etc/passwd 128
+        salt '*' infratest.file_size /etc/passwd 128
     '''
     
     detail = '{0} has size: {1}'.format(thing, expected)
@@ -345,13 +332,13 @@ def test_file_size(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
-def test_package_isinstalled(thing, expected):
+def package_isinstalled(thing, expected):
     '''
     test if package is installed
 
     CLI Example::
 
-        salt '*' infratest.test_package_isinstalled exim4 true
+        salt '*' infratest.package_isinstalled exim4 true
     '''
     
     detail = '{0} is installed: {1}'.format(thing, expected)
@@ -361,13 +348,13 @@ def test_package_isinstalled(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
-def test_package_version(thing, expected):
+def package_version(thing, expected):
     '''
     test package version
 
     CLI Example::
 
-        salt '*' infratest.test_package_version exim4 2.0-pre4-1
+        salt '*' infratest.package_version exim4 2.0-pre4-1
     '''
     
     detail = '{0} is version: {1}'.format(thing, str(expected))
@@ -377,13 +364,13 @@ def test_package_version(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
-def test_service_isrunning(thing, expected):
+def service_isrunning(thing, expected):
     '''
     test if service is running
 
     CLI Example::
 
-        salt '*' infratest.test_service_isrunning exim4 true
+        salt '*' infratest.service_isrunning exim4 true
     '''
     
     detail = '{0} is running: {1}'.format(thing, expected)
@@ -393,13 +380,13 @@ def test_service_isrunning(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
-def test_service_isenabled(thing, expected):
+def service_isenabled(thing, expected):
     '''
     test if service is enabled
 
     CLI Example::
 
-        salt '*' infratest.test_service_isenabled exim4 true
+        salt '*' infratest.service_isenabled exim4 true
     '''
     
     detail = '{0} is enabled: {1}'.format(thing, expected)
@@ -409,13 +396,13 @@ def test_service_isenabled(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
     
-def test_socket_islistening(thing, expected):
+def socket_islistening(thing, expected):
     '''
     test if socket is listening
 
     CLI Example::
 
-        salt '*' infratest.test_socket_islistening tcp://22 true
+        salt '*' infratest.socket_islistening tcp://22 true
     '''
     
     detail = '{0} is listening: {1}'.format(thing, expected)
@@ -425,13 +412,13 @@ def test_socket_islistening(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
-def test_user_exists(thing, expected):
+def user_exists(thing, expected):
     '''
     test if user exists
 
     CLI Example::
 
-        salt '*' infratest.test_user_exists root true
+        salt '*' infratest.user_exists root true
     '''
     
     detail = '{0} exists: {1}'.format(thing, expected)
@@ -441,13 +428,13 @@ def test_user_exists(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
     
-def test_user_uid(thing, expected):
+def user_uid(thing, expected):
     '''
     test user uid
 
     CLI Example::
 
-        salt '*' infratest.test_user_uid root 0
+        salt '*' infratest.user_uid root 0
     '''
     
     detail = '{0} has uid: {1}'.format(thing, expected)
@@ -457,13 +444,13 @@ def test_user_uid(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
     
-def test_user_gid(thing, expected):
+def user_gid(thing, expected):
     '''
     test user gid
 
     CLI Example::
 
-        salt '*' infratest.test_user_gid root 0
+        salt '*' infratest.user_gid root 0
     '''
     
     detail = '{0} has gid: {1}'.format(thing, expected)
@@ -473,13 +460,13 @@ def test_user_gid(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
     
-def test_user_group(thing, expected):
+def user_group(thing, expected):
     '''
     test if user is in a group
 
     CLI Example::
 
-        salt '*' infratest.test_user_group root wheel
+        salt '*' infratest.user_group root wheel
     '''
     
     detail = '{0} has group: {1}'.format(thing, expected)
@@ -489,13 +476,13 @@ def test_user_group(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
     
-def test_user_gids(thing, expected):
+def user_gids(thing, expected):
     '''
     test user has the gids listed
 
     CLI Example::
 
-        salt '*' infratest.test_user_gids root 0,1,2
+        salt '*' infratest.user_gids root 0,1,2
     '''
     
     detail = '{0} has gids: {1}'.format(thing, expected)
@@ -505,13 +492,13 @@ def test_user_gids(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
     
-def test_user_groups(thing, expected):
+def user_groups(thing, expected):
     '''
     test if user has the groups listed
 
     CLI Example::
 
-        salt '*' infratest.test_user_groups root root,wheel
+        salt '*' infratest.user_groups root root,wheel
     '''
     
     detail = '{0} has groups: {1}'.format(thing, expected)
@@ -521,13 +508,13 @@ def test_user_groups(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
     
-def test_user_home(thing, expected):
+def user_home(thing, expected):
     '''
     test user's home directory
 
     CLI Example::
 
-        salt '*' infratest.test_user_home foo /home/foo
+        salt '*' infratest.user_home foo /home/foo
     '''
     
     detail = '{0} has home: {1}'.format(thing, expected)
@@ -537,13 +524,13 @@ def test_user_home(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
     
-def test_user_shell(thing, expected):
+def user_shell(thing, expected):
     '''
     test user's shell
 
     CLI Example::
 
-        salt '*' infratest.test_user_shell foo /bin/bash
+        salt '*' infratest.user_shell foo /bin/bash
     '''
     
     detail = '{0} has shell: {1}'.format(thing, expected)
@@ -553,13 +540,13 @@ def test_user_shell(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
-def test_group_exists(thing, expected):
+def group_exists(thing, expected):
     '''
     test if group exists
 
     CLI Example::
 
-        salt '*' infratest.test_group_exists bar true
+        salt '*' infratest.group_exists bar true
     '''
     
     detail = '{0} exists: {1}'.format(thing, expected)
@@ -569,13 +556,13 @@ def test_group_exists(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
     
-def test_group_gid(thing, expected):
+def group_gid(thing, expected):
     '''
     test if group has the set gid
 
     CLI Example::
 
-        salt '*' infratest.test_group_gid bar 2
+        salt '*' infratest.group_gid bar 2
     '''
     
     detail = '{0} has gid: {1}'.format(thing, expected)
@@ -585,13 +572,13 @@ def test_group_gid(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
     
-def test_interface_exists(thing, expected):
+def interface_exists(thing, expected):
     '''
     test if an interface is present
 
     CLI Example::
 
-        salt '*' infratest.test_interface_exists eth1 true
+        salt '*' infratest.interface_exists eth1 true
     '''
     
     detail = '{0} exists: {1}'.format(thing, expected)
@@ -601,13 +588,13 @@ def test_interface_exists(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
     
-def test_interface_speed(thing, expected):
+def interface_speed(thing, expected):
     '''
     test interface speed setting
 
     CLI Example::
 
-        salt '*' infratest.test_interface_speed eth0 1000
+        salt '*' infratest.interface_speed eth0 1000
     '''
     
     detail = '{0} has speed: {1}'.format(thing, expected)
@@ -617,13 +604,13 @@ def test_interface_speed(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
     
-def test_interface_address(thing, expected):
+def interface_address(thing, expected):
     '''
     test if an interface has the set address
 
     CLI Example::
 
-        salt '*' infratest.test_interface_address eth0 192.168.1.2
+        salt '*' infratest.interface_address eth0 192.168.1.2
     '''
     
     detail = '{0} has address: {1}'.format(thing, expected)
@@ -633,13 +620,13 @@ def test_interface_address(thing, expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
     
-def test_systeminfo_type(expected):
+def systeminfo_type(expected):
     '''
     test the system type
 
     CLI Example::
 
-        salt '*' infratest.test_systeminfo_type linux
+        salt '*' infratest.systeminfo_type linux
     '''
     
     detail = 'type: {0}'.format(expected)
@@ -649,13 +636,13 @@ def test_systeminfo_type(expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
     
-def test_systeminfo_distribution(expected):
+def systeminfo_distribution(expected):
     '''
     test the system distribution
 
     CLI Example::
 
-        salt '*' infratest.test_systeminfo_distribution debian
+        salt '*' infratest.systeminfo_distribution debian
     '''
     
     detail = 'distribution: {0}'.format(expected)
@@ -665,13 +652,13 @@ def test_systeminfo_distribution(expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
     
-def test_systeminfo_release(expected):
+def systeminfo_release(expected):
     '''
     test the system release version
 
     CLI Example::
 
-        salt '*' infratest.test_systeminfo_release '8.3'
+        salt '*' infratest.systeminfo_release '8.3'
     '''
     
     detail = 'release: {0}'.format(expected)
@@ -681,13 +668,13 @@ def test_systeminfo_release(expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
     
-def test_systeminfo_codename(expected):
+def systeminfo_codename(expected):
     '''
     test the system codename
 
     CLI Example::
 
-        salt '*' infratest.test_systeminfo_codename sarge
+        salt '*' infratest.systeminfo_codename sarge
     '''
     
     detail = 'codename: {0}'.format(expected)
@@ -697,16 +684,16 @@ def test_systeminfo_codename(expected):
         INFRATEST['Failed'].append(detail)
     return INFRATEST
     
-def test_sysctl(thing, expected):
+def sysctl(thing, expected):
     '''
     test if a sysctl setting is present
 
     CLI Example::
 
-        salt '*' infratest.test_systeminfo_type linux
+        salt '*' infratest.systeminfo_type linux
     '''
     
-    detail = '{1}: {0}'.format(thing, expected)
+    detail = '{0}: {1}'.format(thing, expected)
     if Sysctl(thing) == expected:
         INFRATEST['Passed'].append(detail)
     else:
@@ -714,131 +701,131 @@ def test_sysctl(thing, expected):
     return INFRATEST
     
 
-def run_all(details=True):
+def run_all(details=False):
     try:
         __salt__
     except:
-        return (False, 'could not get pillar data')
+        return (False, 'could not get infratest pillar data')
     else:
         tests =  __salt__['pillar.get']('infratest')
         
     if 'file' in tests:
         for key, vals in tests['file'].items():
             if 'exists' in vals:
-                test_file_exists(key,vals['exists'])
+                file_exists(key,vals['exists'])
             if 'type' in vals:
                 if vals['type'] == 'file':
-                    test_file_isfile(key, vals['type'])
+                    file_isfile(key, vals['type'])
                 elif vals['type'] == 'directory':
-                    test_file_isdir(key, vals['type'])
+                    file_isdir(key, vals['type'])
                 elif vals['type'] == 'pipe':
-                    test_file_ispipe(key, vals['type'])
+                    file_ispipe(key, vals['type'])
                 elif vals['type'] == 'socket':
-                    test_file_issocket(key, vals['type'])
+                    file_issocket(key, vals['type'])
                 elif vals['type'] == 'symlink':
-                    test_file_issymlink(key, vals['type'])
+                    file_issymlink(key, vals['type'])
                 else:
-                    INFRATEST['Failed'].append("{} could not find a type match: {}".format(key, vals['type']))
+                    INFRATEST['Failed'].append("{0} could not find a type match: {1}".format(key, vals['type']))
             if 'linkedto' in vals:
-                test_file_linkedto(key, vals['linkedto'])
+                file_linkedto(key, vals['linkedto'])
             if 'user' in vals:
-                test_file_user(key, vals['user'])
+                file_user(key, vals['user'])
             if 'group' in vals:
-                test_file_group(key, vals['group'])
+                file_group(key, vals['group'])
             if 'uid' in vals:
-                test_file_uid(key, vals['uid'])
+                file_uid(key, vals['uid'])
             if 'gid' in vals:
-                test_file_gid(key, vals['gid'])
+                file_gid(key, vals['gid'])
             if 'mode' in vals:
-                test_file_mode(key, vals['mode'])
+                file_mode(key, vals['mode'])
             if 'contains' in vals:
                 if type(vals['contains']) == list:
                     for content in vals['contains']:
-                        test_file_contains(key, content)
+                        file_contains(key, content)
                 else:
-                    test_file_contains(key, vals['contains'])
+                    file_contains(key, vals['contains'])
             if 'md5sum' in vals:
-                test_file_md5sum(key, vals['md5sum'])
+                file_md5sum(key, vals['md5sum'])
             if 'sha256sum' in vals:
-                test_file_sha256sum(key, vals['sha256sum'])
+                file_sha256sum(key, vals['sha256sum'])
             if 'mtime' in vals:
-                test_file_mtime(key, vals['mtime'])
+                file_mtime(key, vals['mtime'])
             if 'size' in vals:
-                test_file_size(key, vals['size'])
+                file_size(key, vals['size'])
             
     if 'package' in tests:
         for key, vals in tests['package'].items():
             if 'installed' in vals:
-                test_package_isinstalled(key, vals['installed'])
+                package_isinstalled(key, vals['installed'])
             if 'version' in vals:
-                test_package_version(key, vals['version'])
+                package_version(key, vals['version'])
         
     if 'service' in tests:
         for key, vals in tests['service'].items():
             if 'running'in vals:
-                test_service_isrunning(key, vals['running'])
+                service_isrunning(key, vals['running'])
             if 'enabled' in vals:
-                test_service_isenabled(key, vals['enabled'])
+                service_isenabled(key, vals['enabled'])
         
     if 'socket' in tests:
         for key, vals in tests['socket'].items():
             if 'listening' in vals:
-                test_socket_islistening(key, vals['listening'])
+                socket_islistening(key, vals['listening'])
                 
     if 'user' in tests:
         for key, vals in tests['user'].items():
             if 'exists' in vals:
-                test_user_exists(key, vals['exists'])
+                user_exists(key, vals['exists'])
             if 'uid' in vals:
-                test_user_uid(key, vals['uid'])
+                user_uid(key, vals['uid'])
             if 'gid' in vals:
-                test_user_gid(key, vals['gid'])
+                user_gid(key, vals['gid'])
             if 'group' in vals:
-                test_user_group(key, vals['group'])
+                user_group(key, vals['group'])
             if 'gids' in vals:
-                test_user_gids(key, vals['gids'])
+                user_gids(key, vals['gids'])
             if 'groups' in vals:
-                test_user_groups(key, vals['groups'])
+                user_groups(key, vals['groups'])
             if 'home' in vals:
-                test_user_home(key, vals['home'])
+                user_home(key, vals['home'])
             if 'shell' in vals:
-                test_user_shell(key, vals['shell'])
+                user_shell(key, vals['shell'])
     
     if 'group' in tests:
         for key, vals in tests['group'].items():
             if 'exists' in vals:
-                test_group_exists(key, vals['exists'])
+                group_exists(key, vals['exists'])
             if 'gid' in vals:
-                test_group_gid(key, vals['gid'])
+                group_gid(key, vals['gid'])
     
     if 'interface' in tests:
         for key, vals in tests['interface'].items():
             if 'exists' in vals:
-                test_interface_exists(key, vals['exists'])
+                interface_exists(key, vals['exists'])
             if 'speed' in vals:
-                test_interface_speed(key, vals['speed'])
+                interface_speed(key, vals['speed'])
             if 'addresses' in vals:
                 if type(vals['addresses']) == list:
                     # list of addresses
                     for address in vals['addresses']:
-                        test_interface_address(key, address)
+                        interface_address(key, address)
                 else:
                     # single address, string
-                    test_interface_address(key, vals['addresses'])
+                    interface_address(key, vals['addresses'])
     
     if 'systeminfo' in tests:
         if 'type' in tests['systeminfo']:
-            test_systeminfo_type(tests['systeminfo']['type'])
+            systeminfo_type(tests['systeminfo']['type'])
         if 'distribution' in tests['systeminfo']:
-            test_systeminfo_distribution(tests['systeminfo']['distribution'])
+            systeminfo_distribution(tests['systeminfo']['distribution'])
         if 'release' in tests['systeminfo']:
-            test_systeminfo_release(tests['systeminfo']['release'])
+            systeminfo_release(tests['systeminfo']['release'])
         if 'codename' in tests['systeminfo']:
-            test_systeminfo_codename(tests['systeminfo']['codename'])
+            systeminfo_codename(tests['systeminfo']['codename'])
                 
     if 'sysctl' in tests:
         for key, vals in tests['sysctl'].items():
-            test_sysctl(key, vals['value'])
+            sysctl(key, vals['value'])
     
     INFRATEST['Totals'] = {}
     INFRATEST['Totals']['Pass'] = 0

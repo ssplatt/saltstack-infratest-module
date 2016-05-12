@@ -21,18 +21,18 @@ This module loads configuration data from pillar so you can maintain it as you w
 
 ```yaml
 # pillar/top.sls
----
+
 base:
   '*':
     - infratest.default
-  
+
   'web*':
     - infratest.web
 ```
 
 ```yaml
 # pillar/infratest/default.sls
----
+
 infratest:
   file:
     '/etc/passwd':
@@ -41,7 +41,7 @@ infratest:
 
 ```yaml
 # pillar/infratest/web.sls
----
+
 infratest:
   file:
     '/etc/httpd':
@@ -87,7 +87,7 @@ salt-master.mycorp.com:
 ```
 
 ### A Single Test
-`# salt \* infratest.test_file_mode /etc/passwd 0644`
+`# salt \* infratest.file_mode /etc/passwd 0644`
 
 ```
 salt-master.mycorp.com:
@@ -98,7 +98,8 @@ salt-master.mycorp.com:
 ```
 
 ## TODO
- 1. Process tests
- 2. LocalCommand tests
- 3. Socket clients tests
- 4. Socket get_listening_sockets tests
+ 1. [Process tests](http://testinfra.readthedocs.org/en/latest/modules.html#process)
+ 2. [LocalCommand tests](http://testinfra.readthedocs.org/en/latest/modules.html#localcommand)
+ 3. [Socket clients tests](http://testinfra.readthedocs.org/en/latest/modules.html#testinfra.modules.Socket.clients)
+ 4. [Socket get_listening_sockets tests](http://testinfra.readthedocs.org/en/latest/modules.html#testinfra.modules.Socket.get_listening_sockets)
+
