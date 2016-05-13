@@ -52,8 +52,20 @@ The yaml should merge so that all servers will check for `/etc/passwd` to exist 
 
 ## Usage
 ### All Tests
-`# salt \* infratest.run_all`
+Default is abbreviated output
 
+`# salt \* infratest.run_all`
+```
+salt-master.mycorp.com:
+    ----------
+    Fail:
+        1
+    Pass:
+        6
+```
+
+### All Tests with verbose output
+`# salt \* infratest.run_all details=True`
 ```
 salt-master.mycorp.com:
     ----------
@@ -72,18 +84,6 @@ salt-master.mycorp.com:
             1
         Pass:
             6
-```
-
-### All Tests with abreviated output
-`# salt \* infratest.run_all details=False`
-
-```
-salt-master.mycorp.com:
-    ----------
-    Fail:
-        1
-    Pass:
-        6
 ```
 
 ### A Single Test
