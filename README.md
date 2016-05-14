@@ -1,4 +1,8 @@
-# saltstack-infratest-module [![Build Status](https://travis-ci.org/ssplatt/saltstack-infratest-module.svg?branch=master)](https://travis-ci.org/ssplatt/saltstack-infratest-module)
+# saltstack-infratest-module
+[![Build Status](https://travis-ci.org/ssplatt/saltstack-infratest-module.svg?branch=master)](https://travis-ci.org/ssplatt/saltstack-infratest-module)
+[![Code Climate](https://codeclimate.com/github/ssplatt/saltstack-infratest-module/badges/gpa.svg)](https://codeclimate.com/github/ssplatt/saltstack-infratest-module)
+[![Test Coverage](https://codeclimate.com/github/ssplatt/saltstack-infratest-module/badges/coverage.svg)](https://codeclimate.com/github/ssplatt/saltstack-infratest-module/coverage)
+
 A Salt module using the testinfra python module for compliance testing and auditing. This allows you to take advantage of the many features of Salt, like the yaml merging for configuration and the database of servers to test.
 
 ## Testinfra
