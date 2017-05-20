@@ -364,35 +364,25 @@ def package_version(thing, expected):
     return INFRATEST
 
 
-def process_count(thing, expected):
+def process_count(proc_name, owner, expected_count):
     '''
     test for number of processes
 
     CLI Example::
+    checks for 4 instances of sshd that are owned by root
 
-        salt '*' infratest.process_count sshd 4
+        salt '*' infratest.process_count sshd root 4
     '''
-    proc_count = len(Process.filter(cmd=thing))
-    detail = '{0} has {1} processes running'.format(thing, proc_count)
-    if  proc_count == expected:
+    proc_count = len(Process.filter(comm=proc_name,user=owner))
+    detail = '{0} has {1} processes running owned by {2}'.format(
+                proc_name, proc_count, owner
+            )
+    if  proc_count == expected_count:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', expected {0}'.format(expected_count)
         INFRATEST['Failed'].append(detail)
 
-def process_owner(thing, expected):
-    '''
-    test process ownership
-
-    CLI Example::
-
-        salt '*' infratest.process_owner sshd root
-    '''
-    proc_owner = dir(Process.get(cmd=thing))
-    detail = '{0} is owner by {1}'.format(thing, proc_owner)
-    if  proc_owner == expected:
-        INFRATEST['Passed'].append(detail)
-    else:
-        INFRATEST['Failed'].append(detail)
 
 def service_isrunning(thing, expected):
     '''
@@ -792,11 +782,10 @@ def run_all(details=False):
                 package_version(key, vals['version'])
 
     if 'process' in tests:
-        for key, vals in tests['process'].items():
-            if 'count' in vals:
-                process_count(key, vals['count'])
-            if 'owner' in vals:
-                process_owner(key, vals['count'])
+        for proc, vals in tests['process'].items():
+            for owner, options in vals.items():
+                if 'count' in options:
+                    process_count(proc, owner, options['count'])
 
     if 'service' in tests:
         for key, vals in tests['service'].items():
