@@ -364,6 +364,26 @@ def package_version(thing, expected):
     return INFRATEST
 
 
+def process_count(proc_name, owner, expected_count):
+    '''
+    test for number of processes
+
+    CLI Example::
+    checks for 4 instances of sshd that are owned by root
+
+        salt '*' infratest.process_count sshd root 4
+    '''
+    proc_count = len(Process.filter(comm=proc_name,user=owner))
+    detail = '{0} has {1} processes running owned by {2}'.format(
+                proc_name, proc_count, owner
+            )
+    if  proc_count == expected_count:
+        INFRATEST['Passed'].append(detail)
+    else:
+        detail += ', expected {0}'.format(expected_count)
+        INFRATEST['Failed'].append(detail)
+
+
 def service_isrunning(thing, expected):
     '''
     test if service is running
@@ -760,6 +780,12 @@ def run_all(details=False):
                 package_isinstalled(key, vals['installed'])
             if 'version' in vals:
                 package_version(key, vals['version'])
+
+    if 'process' in tests:
+        for proc, vals in tests['process'].items():
+            for owner, options in vals.items():
+                if 'count' in options:
+                    process_count(proc, owner, options['count'])
 
     if 'service' in tests:
         for key, vals in tests['service'].items():
