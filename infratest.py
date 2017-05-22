@@ -22,17 +22,17 @@ LOG = logging.getLogger(__name__)
 
 __virtualname__ = 'infratest'
 
-conn = testinfra.get_backend('local://')
-File = conn.get_module("File")
-Package = conn.get_module("Package")
-Service = conn.get_module("Service")
-Socket = conn.get_module("Socket")
-Process = conn.get_module("Process")
-Group = conn.get_module("Group")
-User = conn.get_module("User")
-Interface = conn.get_module("Interface")
-SystemInfo = conn.get_module("SystemInfo")
-Sysctl = conn.get_module("Sysctl")
+conn = testinfra.get_host('local://')
+File = conn.file
+Package = conn.package
+Service = conn.service
+Socket = conn.socket
+Process = conn.process
+Group = conn.group
+User = conn.user
+Interface = conn.interface
+SystemInfo = conn.system_info
+Sysctl = conn.sysctl
 
 INFRATEST = {}
 INFRATEST['Passed'] = []
