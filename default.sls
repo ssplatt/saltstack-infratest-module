@@ -35,3 +35,8 @@ infratest:
   sysctl:
     'kernel.osrelease':
       value: 4.4.0-x86_64
+  mount:
+    '/data':
+      device: '/dev/sdb'
+      filesystem: 'ext4'
+      options: ['rw', 'noatime', 'data=writeback']
