@@ -33,16 +33,18 @@ User = conn.user
 Interface = conn.interface
 SystemInfo = conn.system_info
 Sysctl = conn.sysctl
+Mount = conn.mount_point
 
 INFRATEST = {}
 INFRATEST['Passed'] = []
 INFRATEST['Failed'] = []
 
+
 def __virtual__():
     '''
     only load if testinfra is available
     '''
-    
+
     if not HAS_TESTINFRA:
         return (False, 'infratest execution module cannot be loaded: testinfra python module unavailable.')
     return __virtualname__
@@ -276,7 +278,8 @@ def file_md5sum(thing, expected):
     else:
         INFRATEST['Failed'].append(detail)
     return INFRATEST
-    
+
+
 def file_sha256sum(thing, expected):
     '''
     test file sha256sum
@@ -300,14 +303,14 @@ def file_mtime(thing, expected):
     CLI Example::
 
         salt '*' infratest.file_mtime /etc/passwd '2012-01-01 10:01:22'
-    
+
     python yaml tries to convert dates automatically on import
     but it is not predictable, necessarily
     make sure datetime in pillar is in quotes
     i.e. mtime: '2015-09-01 23:11:03'
     see https://docs.saltstack.com/en/latest/topics/troubleshooting/yaml_idiosyncrasies.html#automatic-datetime-conversion
     '''
-    
+
     detail = '{0} has mtime: {1}'.format(thing, expected)
     if File(thing).mtime.strftime('%Y-%m-%d %H:%M:%S') == expected:
         INFRATEST['Passed'].append(detail)
@@ -373,11 +376,11 @@ def process_count(proc_name, owner, expected_count):
 
         salt '*' infratest.process_count sshd root 4
     '''
-    proc_count = len(Process.filter(comm=proc_name,user=owner))
+    proc_count = len(Process.filter(comm=proc_name, user=owner))
     detail = '{0} has {1} processes running owned by {2}'.format(
-                proc_name, proc_count, owner
-            )
-    if  proc_count == expected_count:
+        proc_name, proc_count, owner
+    )
+    if proc_count == expected_count:
         INFRATEST['Passed'].append(detail)
     else:
         detail += ', expected {0}'.format(expected_count)
@@ -696,7 +699,7 @@ def systeminfo_codename(expected):
 
         salt '*' infratest.systeminfo_codename sarge
     '''
-    
+
     detail = 'codename: {0}'.format(expected)
     if SystemInfo.codename == expected:
         INFRATEST['Passed'].append(detail)
@@ -713,14 +716,74 @@ def sysctl(thing, expected):
 
         salt '*' infratest.systeminfo_type linux
     '''
-    
+
     detail = '{0}: {1}'.format(thing, expected)
     if Sysctl(thing) == expected:
         INFRATEST['Passed'].append(detail)
     else:
         INFRATEST['Failed'].append(detail)
     return INFRATEST
-    
+
+
+def mount_exists(thing, expected):
+    '''
+    test if a mount is present
+
+    CLI Example::
+        salt '*' infratest.mount_exists '/'
+    '''
+    detail = '{0} mount exists: {1}'.format(thing, expected)
+    if Mount(thing).exists == expected:
+        INFRATEST['Passed'].append(detail)
+    else:
+        INFRATEST['Failed'].append(detail)
+    return INFRATEST
+
+
+def mount_filesystem(thing, expected):
+    '''
+    test if a mount is present
+
+    CLI Example::
+        salt '*' infratest.mount_exists '/'
+    '''
+    detail = '{0} has {1} file system.'.format(thing, expected)
+    if Mount(thing).filesystem == expected:
+        INFRATEST['Passed'].append(detail)
+    else:
+        INFRATEST['Failed'].append(detail)
+    return INFRATEST
+
+
+def mount_device(thing, expected):
+    '''
+    test if a mount is present
+
+    CLI Example::
+        salt '*' infratest.mount_exists '/'
+    '''
+    detail = '{0} is mounted to {1} device.'.format(thing, expected)
+    if Mount(thing).device == expected:
+        INFRATEST['Passed'].append(detail)
+    else:
+        INFRATEST['Failed'].append(detail)
+    return INFRATEST
+
+
+def mount_options(thing, expected):
+    '''
+    test if a mount is present
+
+    CLI Example::
+        salt '*' infratest.mount_exists '/'
+    '''
+    detail = '{0} has {1} mount options.'.format(thing, expected)
+    if expected in Mount(thing).options:
+        INFRATEST['Passed'].append(detail)
+    else:
+        INFRATEST['Failed'].append(detail)
+    return INFRATEST
+
 
 def run_all(details=False):
     try:
@@ -728,12 +791,12 @@ def run_all(details=False):
     except:
         return (False, 'could not get infratest pillar data')
     else:
-        tests =  __salt__['pillar.get']('infratest')
+        tests = __salt__['pillar.get']('infratest')
 
     if 'file' in tests:
         for key, vals in tests['file'].items():
             if 'exists' in vals:
-                file_exists(key,vals['exists'])
+                file_exists(key, vals['exists'])
             if 'type' in vals:
                 if vals['type'] == 'file':
                     file_isfile(key, vals['type'])
@@ -746,7 +809,8 @@ def run_all(details=False):
                 elif vals['type'] == 'symlink':
                     file_issymlink(key, vals['type'])
                 else:
-                    INFRATEST['Failed'].append("{0} could not find a type match: {1}".format(key, vals['type']))
+                    INFRATEST['Failed'].append(
+                        "{0} could not find a type match: {1}".format(key, vals['type']))
             if 'linkedto' in vals:
                 file_linkedto(key, vals['linkedto'])
             if 'user' in vals:
@@ -817,14 +881,14 @@ def run_all(details=False):
                 user_home(key, vals['home'])
             if 'shell' in vals:
                 user_shell(key, vals['shell'])
-    
+
     if 'group' in tests:
         for key, vals in tests['group'].items():
             if 'exists' in vals:
                 group_exists(key, vals['exists'])
             if 'gid' in vals:
                 group_gid(key, vals['gid'])
-    
+
     if 'interface' in tests:
         for key, vals in tests['interface'].items():
             if 'exists' in vals:
@@ -839,7 +903,7 @@ def run_all(details=False):
                 else:
                     # single address, string
                     interface_address(key, vals['addresses'])
-    
+
     if 'systeminfo' in tests:
         if 'type' in tests['systeminfo']:
             systeminfo_type(tests['systeminfo']['type'])
@@ -849,15 +913,31 @@ def run_all(details=False):
             systeminfo_release(tests['systeminfo']['release'])
         if 'codename' in tests['systeminfo']:
             systeminfo_codename(tests['systeminfo']['codename'])
-                
+
     if 'sysctl' in tests:
         for key, vals in tests['sysctl'].items():
             sysctl(key, vals['value'])
-    
+
+    if 'mount' in tests:
+        for key, vals in tests['mount'].items():
+            if 'exists'in vals:
+                mount_exists(key, vals['exists'])
+            if 'filesystem'in vals:
+                mount_filesystem(key, vals['filesystem'])
+            if 'device'in vals:
+                mount_device(key, vals['device'])
+            if 'options'in vals:
+                if type(vals['options']) == list:
+                    # list of options
+                    for option in vals['options']:
+                        mount_options(key, option)
+                else:
+                    mount_options(key, vals['options'])
+
     INFRATEST['Totals'] = {}
     INFRATEST['Totals']['Pass'] = 0
     INFRATEST['Totals']['Fail'] = 0
-    
+
     for result in INFRATEST['Passed']:
         INFRATEST['Totals']['Pass'] += 1
 
