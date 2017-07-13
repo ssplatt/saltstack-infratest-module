@@ -158,6 +158,7 @@ def file_linkedto(thing, expected):
     if File(thing).linked_to == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(File(thing).linked_to)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -174,6 +175,7 @@ def file_user(thing, expected):
     if File(thing).user == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        details += ', found: {}'.format(File(thing).user)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -190,6 +192,7 @@ def file_group(thing, expected):
     if File(thing).group == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        details += ', found {}'.format(File(thing).group)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -206,6 +209,7 @@ def file_uid(thing, expected):
     if File(thing).uid == vals['uid']:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(File(thing).uid)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -222,6 +226,7 @@ def file_gid(thing, expected):
     if File(thing).gid == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(File(thing).gid)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -244,6 +249,7 @@ def file_mode(thing, expected):
     if oct(File(thing).mode) == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(oct(File(thing).mode))
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -276,6 +282,7 @@ def file_md5sum(thing, expected):
     if File(thing).md5sum == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(File(thing).md5sm)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -292,6 +299,7 @@ def file_sha256sum(thing, expected):
     if File(thing).sha256sum == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(File(thing).sha256sum)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -331,6 +339,7 @@ def file_size(thing, expected):
     if File(thing).size == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(File(thing).size)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -363,6 +372,7 @@ def package_version(thing, expected):
     if Package(thing).version.startswith(str(expected)):
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(Package(thing).version)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -383,7 +393,7 @@ def process_count(proc_name, owner, expected_count):
     if proc_count == expected_count:
         INFRATEST['Passed'].append(detail)
     else:
-        detail += ', expected {0}'.format(expected_count)
+        detail += ', found: {}'.format(expected_count)
         INFRATEST['Failed'].append(detail)
 
 
@@ -463,6 +473,7 @@ def user_uid(thing, expected):
     if User(thing).uid == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(User(thing).uid)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -479,6 +490,7 @@ def user_gid(thing, expected):
     if User(thing).gid == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(User(thing).gid)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -511,6 +523,7 @@ def user_gids(thing, expected):
     if User(thing).gids == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(User(thing).gids)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -527,6 +540,7 @@ def user_groups(thing, expected):
     if User(thing).groups == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(User(thing).groups)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -543,6 +557,7 @@ def user_home(thing, expected):
     if User(thing).home == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(User(thing).home)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -559,6 +574,7 @@ def user_shell(thing, expected):
     if User(thing).shell == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(User(thing).shell)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -591,6 +607,7 @@ def group_gid(thing, expected):
     if Group(thing).gid == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(Group(thing).gid)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -623,6 +640,7 @@ def interface_speed(thing, expected):
     if Interface(thing).speed == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(Interface(thing).speed)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -639,6 +657,7 @@ def interface_address(thing, expected):
     if expected in Interface(thing).addresses:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(Interface(thing).addresses)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -655,6 +674,7 @@ def systeminfo_type(expected):
     if SystemInfo.type == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(SystemInfo.type)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -671,6 +691,7 @@ def systeminfo_distribution(expected):
     if SystemInfo.distribution == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(SystemInfo.distribution)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -687,6 +708,7 @@ def systeminfo_release(expected):
     if SystemInfo.release == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(SystemInfo.release)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -704,6 +726,7 @@ def systeminfo_codename(expected):
     if SystemInfo.codename == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(SystemInfo.codename)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -721,6 +744,7 @@ def sysctl(thing, expected):
     if Sysctl(thing) == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(Sysctl(thing))
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -736,6 +760,7 @@ def mount_exists(thing, expected):
     if Mount(thing).exists == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(Mount(thing).exists)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -745,12 +770,13 @@ def mount_filesystem(thing, expected):
     test if a mount is present
 
     CLI Example::
-        salt '*' infratest.mount_exists '/'
+        salt '*' infratest.mount_filesystem 'ext4'
     '''
     detail = '{0} has {1} file system.'.format(thing, expected)
     if Mount(thing).filesystem == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(Mount(thing).filesystem)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -760,12 +786,13 @@ def mount_device(thing, expected):
     test if a mount is present
 
     CLI Example::
-        salt '*' infratest.mount_exists '/'
+        salt '*' infratest.mount_device '/dev/sda1'
     '''
     detail = '{0} is mounted to {1} device.'.format(thing, expected)
     if Mount(thing).device == expected:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(Mount(thing).device)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -775,12 +802,13 @@ def mount_options(thing, expected):
     test if a mount is present
 
     CLI Example::
-        salt '*' infratest.mount_exists '/'
+        salt '*' infratest.mount_options 'rw','relateime','data=ordered'
     '''
     detail = '{0} has {1} mount options.'.format(thing, expected)
     if expected in Mount(thing).options:
         INFRATEST['Passed'].append(detail)
     else:
+        detail += ', found: {}'.format(Mount(thing).options)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
