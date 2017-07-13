@@ -541,7 +541,7 @@ def user_groups(thing, expected):
     detail = '{0} has groups: {1}'.format(thing, expected)
     # hack to get around https://github.com/philpep/testinfra/issues/221
     groupstring = ','.join([str(group) for group in User(thing).groups])
-    if expected == groupstring:
+    if groupstring == expected:
         INFRATEST['Passed'].append(detail)
     else:
         detail += ', found: {}'.format(groupstring)
