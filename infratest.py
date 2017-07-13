@@ -520,7 +520,9 @@ def user_gids(thing, expected):
         salt '*' infratest.user_gids root 0,1,2
     '''
     detail = '{0} has gids: {1}'.format(thing, expected)
-    if User(thing).gids == expected:
+    # hack to get around https://github.com/philpep/testinfra/issues/221
+    gidstring = ','.join([str(gid) for gid in User(thing).gids])
+    if gidstring == expected:
         INFRATEST['Passed'].append(detail)
     else:
         detail += ', found: {}'.format(User(thing).gids)
@@ -537,10 +539,12 @@ def user_groups(thing, expected):
         salt '*' infratest.user_groups root root,wheel
     '''
     detail = '{0} has groups: {1}'.format(thing, expected)
-    if User(thing).groups == expected:
+    # hack to get around https://github.com/philpep/testinfra/issues/221
+    groupstring = ','.join([str(group) for group in User(thing).groups])
+    if expected == groupstring:
         INFRATEST['Passed'].append(detail)
     else:
-        detail += ', found: {}'.format(User(thing).groups)
+        detail += ', found: {}'.format(groupstring)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -737,11 +741,18 @@ def sysctl(thing, expected):
 
     CLI Example::
 
-        salt '*' infratest.systeminfo_type linux
+        salt '*' infratest.sysctl vm.dirty_ratio 20
     '''
 
     detail = '{0}: {1}'.format(thing, expected)
-    if Sysctl(thing) == expected:
+    try:
+        check = Sysctl(thing)
+    except AssertionError:
+        detail = '{} is not a valid sysctl setting'.format(thing)
+        INFRATEST['Failed'].append(detail)
+        return INFRATEST
+
+    if check == expected:
         INFRATEST['Passed'].append(detail)
     else:
         detail += ', found: {}'.format(Sysctl(thing))
@@ -754,13 +765,12 @@ def mount_exists(thing, expected):
     test if a mount is present
 
     CLI Example::
-        salt '*' infratest.mount_exists '/'
+        salt '*' infratest.mount_exists '/' true
     '''
     detail = '{0} mount exists: {1}'.format(thing, expected)
     if Mount(thing).exists == expected:
         INFRATEST['Passed'].append(detail)
     else:
-        detail += ', found: {}'.format(Mount(thing).exists)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -783,10 +793,10 @@ def mount_filesystem(thing, expected):
 
 def mount_device(thing, expected):
     '''
-    test if a mount is present
+    test if a mount is present on a device
 
     CLI Example::
-        salt '*' infratest.mount_device '/dev/sda1'
+        salt '*' infratest.mount_device '/' '/dev/sda1'
     '''
     detail = '{0} is mounted to {1} device.'.format(thing, expected)
     if Mount(thing).device == expected:
@@ -802,13 +812,15 @@ def mount_options(thing, expected):
     test if a mount is present
 
     CLI Example::
-        salt '*' infratest.mount_options 'rw','relateime','data=ordered'
+        salt '*' infratest.mount_options '/' 'rw,relatime,data=ordered'
     '''
-    detail = '{0} has {1} mount options.'.format(thing, expected)
-    if expected in Mount(thing).options:
+    detail = '{0} has {1}'.format(thing, expected)
+    # hack done to circumvent: https://github.com/philpep/testinfra/issues/221
+    mountstring = ','.join([str(option) for option in Mount(thing).options])
+    if expected == mountstring:
         INFRATEST['Passed'].append(detail)
     else:
-        detail += ', found: {}'.format(Mount(thing).options)
+        detail += ', found: {}'.format(mountstring)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
