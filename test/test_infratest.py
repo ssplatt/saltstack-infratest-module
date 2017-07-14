@@ -4,7 +4,8 @@ import os
 
 def _standup_file_exists(path):
     if not os.path.isfile(path):
-        file(path,"w+")
+        with open(path, 'w') as f:
+            f.write('file exists test')
 
 def _cleanup_file_exists(path):
     os.remove(path)
