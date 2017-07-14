@@ -175,7 +175,7 @@ def file_user(thing, expected):
     if File(thing).user == expected:
         INFRATEST['Passed'].append(detail)
     else:
-        details += ', found: {}'.format(File(thing).user)
+        detail += ', found: {}'.format(File(thing).user)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
@@ -192,7 +192,7 @@ def file_group(thing, expected):
     if File(thing).group == expected:
         INFRATEST['Passed'].append(detail)
     else:
-        details += ', found {}'.format(File(thing).group)
+        detail += ', found {}'.format(File(thing).group)
         INFRATEST['Failed'].append(detail)
     return INFRATEST
 
