@@ -413,6 +413,27 @@ def service_isrunning(thing, expected):
     return INFRATEST
 
 
+def service_isvalid(thing, expected):
+    '''
+    test if service is valid
+
+    CLI Example::
+
+        salt '*' infratest.service_isvalid exim4 true
+    '''
+    detail = '{0} is valid: {1}'.format(thing, expected)
+
+    try:
+        check = Service(thing).is_valid
+    # is_valid will always raise an assertion error on failure.
+    except AssertionError:
+        INFRATEST['Failed'].append(detail)
+    else:
+        INFRATEST['Passed'].append(detail)
+
+    return INFRATEST
+
+
 def service_isenabled(thing, expected):
     '''
     test if service is enabled
@@ -897,6 +918,8 @@ def run_all(details=False):
                 service_isrunning(key, vals['running'])
             if 'enabled' in vals:
                 service_isenabled(key, vals['enabled'])
+            if 'valid' in vals:
+                service_isvalid(key, vals['valid'])
 
     if 'socket' in tests:
         for key, vals in tests['socket'].items():
